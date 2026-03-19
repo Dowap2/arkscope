@@ -30,3 +30,13 @@ create table if not exists characters (
 create index if not exists idx_raid_members_raid_id on raid_members(raid_id);
 create index if not exists idx_characters_raid_member_id on characters(raid_member_id);
 create index if not exists idx_raids_share_token on raids(share_token);
+
+-- RLS 비활성화 (인증 없는 공개 앱)
+alter table raids disable row level security;
+alter table raid_members disable row level security;
+alter table characters disable row level security;
+
+-- anon/authenticated 역할에 권한 부여
+grant select, insert, update, delete on raids to anon, authenticated;
+grant select, insert, update, delete on raid_members to anon, authenticated;
+grant select, insert, update, delete on characters to anon, authenticated;

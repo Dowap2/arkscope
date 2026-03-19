@@ -1,4 +1,4 @@
-import { LostarkCharacter } from "@/types";
+import { LostarkCharacter, CharacterArmory } from "@/types";
 
 const BASE_URL = "https://developer-lostark.game.onstove.com";
 
@@ -33,4 +33,16 @@ export async function getAccountCharacters(
     `/characters/${encoded}/siblings`
   );
   return data ?? [];
+}
+
+/**
+ * 캐릭터 장착 각인 / 보석 / 프로필 조회
+ */
+export async function getCharacterArmory(
+  characterName: string
+): Promise<CharacterArmory> {
+  const encoded = encodeURIComponent(characterName);
+  return lostarkFetch<CharacterArmory>(
+    `/armories/characters/${encoded}?filters=profiles+engravings+gems`
+  );
 }

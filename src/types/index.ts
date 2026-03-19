@@ -23,7 +23,7 @@ export type Character = {
   created_at: string;
 };
 
-// Lostark API response type
+// Lostark API - 캐릭터 목록
 export type LostarkCharacter = {
   ServerName: string;
   CharacterName: string;
@@ -31,4 +31,63 @@ export type LostarkCharacter = {
   CharacterClassName: string;
   ItemAvgLevel: string;
   ItemMaxLevel: string;
+};
+
+// Lostark API - Armory
+export type ArmoryProfile = {
+  CharacterImage: string | null;
+  ExpeditionLevel: number;
+  ServerName: string;
+  CharacterName: string;
+  CharacterLevel: number;
+  CharacterClassName: string;
+  ItemAvgLevel: string;
+  ItemMaxLevel: string;
+  GuildName: string | null;
+  Title: string | null;
+  Stats: { Type: string; Value: string }[];
+};
+
+export type ArmoryEngraving = {
+  Slot: number;
+  Name: string;
+  Icon: string;
+  Tooltip: string;
+};
+
+export type ArmoryEffect = {
+  Name: string;
+  Description: string;
+};
+
+export type ArmoryEngrave = {
+  Engravings: ArmoryEngraving[] | null;
+  Effects: ArmoryEffect[] | null;
+};
+
+export type ArmoryGemEffect = {
+  GemSlot: number;
+  Name: string;
+  Description: string;
+  Icon: string;
+};
+
+export type ArmoryGemItem = {
+  Slot: number;
+  Name: string;
+  Icon: string;
+  Level: number;
+  Class: string;
+  EffectType: string;
+};
+
+export type ArmoryGem = {
+  Gems: ArmoryGemItem[] | null;
+  Effects: ArmoryGemEffect[] | null;
+};
+
+export type CharacterArmory = {
+  ArmoryProfile: ArmoryProfile | null;
+  ArmoryEngrave: ArmoryEngrave | null;
+  ArmoryGem: ArmoryGem | null;
 };
