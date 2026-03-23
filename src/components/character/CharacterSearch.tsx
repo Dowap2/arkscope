@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { LostarkCharacter } from "@/types";
 import { getLevelTier } from "@/lib/level";
 
@@ -77,9 +78,10 @@ export default function CharacterSearch() {
               {characters.map((c) => {
                 const level = parseItemLevel(c.ItemAvgLevel);
                 return (
-                  <div
+                  <Link
                     key={c.CharacterName}
-                    className="flex items-center justify-between rounded-lg bg-slate-700/50 border border-slate-700 px-3 py-2"
+                    href={`/characters/${encodeURIComponent(c.CharacterName)}`}
+                    className="flex items-center justify-between rounded-lg bg-slate-700/50 border border-slate-700 px-3 py-2 hover:bg-slate-700 hover:border-slate-500 transition-colors"
                   >
                     <div className="min-w-0">
                       <span className="font-medium text-white text-sm">
@@ -97,7 +99,7 @@ export default function CharacterSearch() {
                     >
                       {c.ItemAvgLevel}
                     </span>
-                  </div>
+                  </Link>
                 );
               })}
             </>

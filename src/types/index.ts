@@ -60,15 +60,25 @@ export type ArmoryEffect = {
   Description: string;
 };
 
+export type ArkPassiveEffect = {
+  Name: string;
+  Description: string;
+  Grade: number;
+  Level: number;
+  AbilityStoneLevel: number | null;
+};
+
 export type ArmoryEngrave = {
   Engravings: ArmoryEngraving[] | null;
   Effects: ArmoryEffect[] | null;
+  ArkPassiveEffects: ArkPassiveEffect[] | null;
 };
 
-export type ArmoryGemEffect = {
+export type ArmoryGemSkillEffect = {
   GemSlot: number;
   Name: string;
-  Description: string;
+  Description: string[];
+  Option: string;
   Icon: string;
 };
 
@@ -77,17 +87,74 @@ export type ArmoryGemItem = {
   Name: string;
   Icon: string;
   Level: number;
-  Class: string;
-  EffectType: string;
+  Grade: string;
+  Tooltip: string;
 };
 
 export type ArmoryGem = {
   Gems: ArmoryGemItem[] | null;
-  Effects: ArmoryGemEffect[] | null;
+  Effects: { Description: string; Skills: ArmoryGemSkillEffect[] } | null;
+};
+
+export type ArmoryEquipment = {
+  Slot: number;
+  Name: string;
+  Icon: string;
+  Type: string;
+  Grade: string;
+  Tooltip: string;
+};
+
+export type ArmoryCardItem = {
+  Slot: number;
+  Name: string;
+  Icon: string;
+  AwakeCount: number;
+  AwakeTotal: number;
+  Grade: string;
+  Tooltip: string;
+};
+
+export type ArmoryCardEffect = {
+  Index: number;
+  CardSlots: number[];
+  Items: { Name: string; Description: string }[];
+};
+
+export type ArmoryCard = {
+  Cards: ArmoryCardItem[] | null;
+  Effects: ArmoryCardEffect[] | null;
+};
+
+export type SkillTripod = {
+  Name: string;
+  Description: string;
+  IsSelected: boolean;
+  Tier: number;
+  Slot: number;
+};
+
+export type SkillRune = {
+  Name: string;
+  Icon: string;
+  Grade: string;
+};
+
+export type ArmorySkill = {
+  Name: string;
+  Icon: string;
+  Level: number;
+  Type: string;
+  IsAwakening: boolean;
+  Tripods: SkillTripod[];
+  Rune: SkillRune | null;
 };
 
 export type CharacterArmory = {
   ArmoryProfile: ArmoryProfile | null;
-  ArmoryEngrave: ArmoryEngrave | null;
+  ArmoryEquipment: ArmoryEquipment[] | null;
+  ArmoryEngraving: ArmoryEngrave | null;
   ArmoryGem: ArmoryGem | null;
+  ArmoryCard: ArmoryCard | null;
+  ArmorySkill: ArmorySkill[] | null;
 };

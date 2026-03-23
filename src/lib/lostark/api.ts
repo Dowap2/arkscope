@@ -43,6 +43,6 @@ export async function getCharacterArmory(
 ): Promise<CharacterArmory> {
   const encoded = encodeURIComponent(characterName);
   return lostarkFetch<CharacterArmory>(
-    `/armories/characters/${encoded}?filters=profiles+engravings+gems`
+    `/armories/characters/${encoded}?filters=profiles+equipment+engravings+gems+cards+combat-skills`
   );
 }
