@@ -4,7 +4,8 @@
  */
 
 import { Client, GatewayIntentBits, Events, Collection, ChatInputCommandInteraction } from "discord.js";
-import { raidsCommand, charactersCommand } from "./commands/raids.js";
+import { raidsCommand, tierCommand, charactersCommand } from "./commands/raids.js";
+import { merchantCommand, startMerchantPoller } from "./commands/merchant.js";
 
 type Command = {
   data: { name: string; toJSON?: () => unknown };
@@ -39,7 +40,9 @@ if (!token) throw new Error("DISCORD_TOKEN이 설정되지 않았습니다.");
 // 커맨드 등록
 const commands = new Collection<string, Command>();
 commands.set(raidsCommand.data.name, raidsCommand);
+commands.set(tierCommand.data.name, tierCommand);
 commands.set(charactersCommand.data.name, charactersCommand);
+commands.set(merchantCommand.data.name, merchantCommand);
 
 // 클라이언트 생성
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -47,6 +50,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.once(Events.ClientReady, (c) => {
   console.log(`✅ ${c.user.tag} 로그인 완료`);
   console.log(`등록된 커맨드: ${[...commands.keys()].map((k) => `/${k}`).join(", ")}`);
+  startMerchantPoller(c);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

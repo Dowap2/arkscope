@@ -19,8 +19,9 @@ export const LEVEL_TIERS: LevelTier[] = [
 ];
 
 export function getLevelTier(level: number): LevelTier {
+  const floored = Math.floor(level);
   return (
-    LEVEL_TIERS.find((t) => level >= t.min && level <= t.max) ??
+    LEVEL_TIERS.find((t) => floored >= t.min && floored <= t.max) ??
     LEVEL_TIERS[LEVEL_TIERS.length - 1]
   );
 }

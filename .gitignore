@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# discord bot state
+discord/merchant-watches.json
+
+# 크롤러 디버그 출력
+merchant_debug.json

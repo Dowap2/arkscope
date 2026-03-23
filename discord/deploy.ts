@@ -6,7 +6,8 @@
  */
 
 import { REST, Routes } from "discord.js";
-import { raidsCommand, charactersCommand } from "./commands/raids.js";
+import { raidsCommand, tierCommand, charactersCommand } from "./commands/raids.js";
+import { merchantCommand } from "./commands/merchant.js";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
@@ -36,7 +37,12 @@ if (!token || !clientId) {
   );
 }
 
-const commands = [raidsCommand.data.toJSON(), charactersCommand.data.toJSON()];
+const commands = [
+  raidsCommand.data.toJSON(),
+  tierCommand.data.toJSON(),
+  charactersCommand.data.toJSON(),
+  merchantCommand.data.toJSON(),
+];
 
 const rest = new REST().setToken(token);
 

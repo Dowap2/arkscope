@@ -1,0 +1,2 @@
+# 표준 라이브러리만 사용 — 추가 설치 불필요
+# (urllib, json, re, datetime 모두 내장)

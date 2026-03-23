@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\": {\"hookEventName\": \"Stop\", \"additionalContext\": \"[필수] 이번 대화에서 코드를 작성하거나 수정했다면, 응답 종료 전 md/ 폴더에 YYYY-MM-DD-작업명.md 형식으로 작업 요약 파일을 생성하거나 업데이트하세요. 이미 생성했다면 생략해도 됩니다.\"}}'",
+            "shell": "bash"
+          }
+        ]
+      }
+    ]
+  }
+}
