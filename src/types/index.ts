@@ -37,6 +37,7 @@ export type LostarkCharacter = {
 export type ArmoryProfile = {
   CharacterImage: string | null;
   ExpeditionLevel: number;
+  TownLevel?: number;
   ServerName: string;
   CharacterName: string;
   CharacterLevel: number;
@@ -127,11 +128,12 @@ export type ArmoryCard = {
 };
 
 export type SkillTripod = {
-  Name: string;
-  Description: string;
-  IsSelected: boolean;
   Tier: number;
   Slot: number;
+  Name: string;
+  Icon: string;
+  IsSelected: boolean;
+  Tooltip: string;
 };
 
 export type SkillRune = {
@@ -145,9 +147,11 @@ export type ArmorySkill = {
   Icon: string;
   Level: number;
   Type: string;
+  SkillType: number;
   IsAwakening: boolean;
   Tripods: SkillTripod[];
   Rune: SkillRune | null;
+  Tooltip?: string;
 };
 
 export type CharacterArmory = {
@@ -156,5 +160,5 @@ export type CharacterArmory = {
   ArmoryEngraving: ArmoryEngrave | null;
   ArmoryGem: ArmoryGem | null;
   ArmoryCard: ArmoryCard | null;
-  ArmorySkill: ArmorySkill[] | null;
+  ArmorySkills: ArmorySkill[] | null;
 };
