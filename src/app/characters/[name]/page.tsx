@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getCharacterArmory } from "@/lib/lostark/api";
+import { getCharacterArmory, getCharacterArkPassive } from "@/lib/lostark/api";
+import type { ArkPassiveData } from "@/types";
 import ArmoryView from "@/components/character/ArmoryView";
 import { getLevelTier } from "@/lib/level";
 
@@ -22,8 +23,12 @@ export default async function CharacterPage({
   const characterName = decodeURIComponent(name);
 
   let armory;
+  let arkPassive: ArkPassiveData | null = null;
   try {
-    armory = await getCharacterArmory(characterName);
+    [armory, arkPassive] = await Promise.all([
+      getCharacterArmory(characterName),
+      getCharacterArkPassive(characterName).catch(() => null),
+    ]);
   } catch {
     notFound();
   }
@@ -90,7 +95,7 @@ export default async function CharacterPage({
       </header>
 
       <main className="max-w-4xl mx-auto px-4 pb-12">
-        <ArmoryView armory={armory} />
+        <ArmoryView armory={armory} arkPassive={arkPassive} />
       </main>
     </div>
   );

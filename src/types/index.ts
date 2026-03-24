@@ -154,6 +154,28 @@ export type ArmorySkill = {
   Tooltip?: string;
 };
 
+// Lostark API - Ark Passive (/armories/characters/{name}/arkpassive)
+export type ArkPassivePoint = {
+  Name: string;
+  Value: number;
+  Tooltip: string;
+  Description?: string;
+};
+
+export type ArkPassiveEffectSkill = {
+  Name: string;
+  Description: string;
+  Icon: string;
+  ToolTip?: string;
+  Tooltip?: string;
+};
+
+export type ArkPassiveData = {
+  IsArkPassive: boolean;
+  Points: ArkPassivePoint[] | null;
+  Effects: ArkPassiveEffectSkill[] | null;
+};
+
 export type CharacterArmory = {
   ArmoryProfile: ArmoryProfile | null;
   ArmoryEquipment: ArmoryEquipment[] | null;

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { ReactNode } from "react";
-import { CharacterArmory, ArmoryEquipment, ArmorySkill } from "@/types";
+import { CharacterArmory, ArmoryEquipment, ArmorySkill, ArkPassiveData } from "@/types";
 import Image from "next/image";
 
 /* ─── 유틸 ─────────────────────────────────────────────── */
@@ -567,68 +567,121 @@ function SkillTab({ armory }: { armory: CharacterArmory }) {
 
 /* ─── 아크 패시브 탭 ────────────────────────────────────── */
 
-function ArkPassiveTab({ armory }: { armory: CharacterArmory }) {
-  const engraveData = armory.ArmoryEngraving;
-  const arkPassiveEffects = Array.isArray(engraveData?.ArkPassiveEffects)
-    ? engraveData.ArkPassiveEffects
-    : [];
-  const legacyEffects = Array.isArray(engraveData?.Effects) ? engraveData.Effects : [];
+function ArkPassiveTab({
+  armory,
+  arkPassive,
+}: {
+  armory: CharacterArmory;
+  arkPassive: ArkPassiveData | null;
+}) {
+  // 신규: 전용 API 데이터
+  const points  = arkPassive?.Points  ?? [];
+  const effects = arkPassive?.Effects ?? [];
 
-  if (arkPassiveEffects.length === 0 && legacyEffects.length === 0) {
-    return <p className="py-12 text-center text-sm text-slate-500">각인 정보 없음</p>;
+  // 폴백: engravings 필터에서 온 구버전 데이터
+  const engraveData      = armory.ArmoryEngraving;
+  const legacyArkEffects = Array.isArray(engraveData?.ArkPassiveEffects) ? engraveData.ArkPassiveEffects : [];
+  const legacyEffects    = Array.isArray(engraveData?.Effects)           ? engraveData.Effects           : [];
+
+  const hasNewData = points.length > 0 || effects.length > 0;
+  const hasLegacy  = legacyArkEffects.length > 0 || legacyEffects.length > 0;
+
+  if (!hasNewData && !hasLegacy) {
+    return <p className="py-12 text-center text-sm text-slate-500">아크 패시브 정보 없음</p>;
   }
 
   return (
-    <div className="pt-6">
-      <div className="rounded-xl bg-slate-800 border border-slate-700 p-5">
-        <h2 className="text-sm font-semibold text-slate-300 mb-3">장착 각인</h2>
-        {arkPassiveEffects.length > 0 ? (
+    <div className="pt-6 flex flex-col gap-6">
+
+      {/* ── 전용 API: 포인트 분배 ── */}
+      {points.length > 0 && (
+        <div className="rounded-xl bg-slate-800 border border-slate-700 p-5">
+          <h2 className="text-sm font-semibold text-slate-300 mb-3">포인트 분배</h2>
           <div className="flex flex-wrap gap-2">
-            {arkPassiveEffects.map((e, i) => (
-              <div
-                key={i}
-                className={`flex flex-col px-3 py-2 rounded-lg border text-sm font-medium ${engravingLevelColor(e.Level)}`}
-              >
-                <span>
-                  {e.Name} Lv.{e.Level}
-                </span>
-                {e.Description && (
-                  <span className="text-xs opacity-70 font-normal mt-0.5 max-w-52 leading-tight">
-                    {stripHtml(e.Description)}
-                  </span>
-                )}
-              </div>
+            {points.map((p, i) => (
+              <Tooltip key={i} content={stripHtml(p.Tooltip ?? p.Description ?? "")}>
+                <div className="flex items-center gap-2 bg-slate-700/60 border border-slate-600 rounded-lg px-3 py-2 cursor-default">
+                  <span className="text-xs text-slate-400">{p.Name}</span>
+                  <span className="text-sm font-bold text-white">{p.Value}</span>
+                </div>
+              </Tooltip>
             ))}
           </div>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {legacyEffects.map((e, i) => {
-              const m = e.Name.match(/Lv\.(\d)/);
-              const lv = m ? parseInt(m[1]) : 0;
+        </div>
+      )}
+
+      {/* ── 전용 API: 패시브 스킬 효과 ── */}
+      {effects.length > 0 && (
+        <div className="rounded-xl bg-slate-800 border border-slate-700 p-5">
+          <h2 className="text-sm font-semibold text-slate-300 mb-3">
+            패시브 효과 <span className="text-slate-500 font-normal">{effects.length}개</span>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {effects.map((e, i) => {
+              const tooltip = e.ToolTip ?? e.Tooltip ?? "";
               return (
-                <div
-                  key={i}
-                  className={`flex flex-col px-3 py-2 rounded-lg border text-sm font-medium ${engravingLevelColor(lv)}`}
-                >
-                  <span>{e.Name}</span>
-                  {e.Description && (
-                    <span className="text-xs opacity-70 font-normal mt-0.5 max-w-52 leading-tight">
-                      {e.Description}
-                    </span>
-                  )}
-                </div>
+                <Tooltip key={i} content={stripHtml(tooltip)} label={e.Name}>
+                  <div className="flex gap-3 rounded-lg bg-slate-700/40 border border-slate-700 p-3 cursor-default">
+                    {e.Icon && (
+                      <div className="flex-shrink-0 w-10 h-10 rounded border border-slate-600 overflow-hidden bg-slate-900 relative">
+                        <Image src={e.Icon} alt={e.Name} fill className="object-cover" unoptimized />
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-slate-200">{e.Name}</p>
+                      {e.Description && (
+                        <p className="text-xs text-slate-400 mt-0.5 leading-relaxed line-clamp-2">
+                          {stripHtml(e.Description)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Tooltip>
               );
             })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* ── 폴백: 구버전 각인 데이터 ── */}
+      {!hasNewData && hasLegacy && (
+        <div className="rounded-xl bg-slate-800 border border-slate-700 p-5">
+          <h2 className="text-sm font-semibold text-slate-300 mb-3">장착 각인</h2>
+          <div className="flex flex-wrap gap-2">
+            {(legacyArkEffects.length > 0 ? legacyArkEffects.map((e, i) => (
+              <div key={i} className={`flex flex-col px-3 py-2 rounded-lg border text-sm font-medium ${engravingLevelColor(e.Level)}`}>
+                <span>{e.Name} Lv.{e.Level}</span>
+                {e.Description && (
+                  <span className="text-xs opacity-70 font-normal mt-0.5 max-w-52 leading-tight">{stripHtml(e.Description)}</span>
+                )}
+              </div>
+            )) : legacyEffects.map((e, i) => {
+              const m  = e.Name.match(/Lv\.(\d)/);
+              const lv = m ? parseInt(m[1]) : 0;
+              return (
+                <div key={i} className={`flex flex-col px-3 py-2 rounded-lg border text-sm font-medium ${engravingLevelColor(lv)}`}>
+                  <span>{e.Name}</span>
+                  {e.Description && <span className="text-xs opacity-70 font-normal mt-0.5 max-w-52 leading-tight">{e.Description}</span>}
+                </div>
+              );
+            }))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
 
 /* ─── 메인 뷰 ───────────────────────────────────────────── */
 
-export default function ArmoryView({ armory }: { armory: CharacterArmory }) {
+export default function ArmoryView({
+  armory,
+  arkPassive,
+}: {
+  armory: CharacterArmory;
+  arkPassive: ArkPassiveData | null;
+}) {
   const [activeTab, setActiveTab] = useState<Tab>("전투");
 
   return (
@@ -655,7 +708,7 @@ export default function ArmoryView({ armory }: { armory: CharacterArmory }) {
       {/* ── 탭 콘텐츠 ── */}
       {activeTab === "전투"    && <BattleTab armory={armory} />}
       {activeTab === "스킬"    && <SkillTab armory={armory} />}
-      {activeTab === "아크패시브" && <ArkPassiveTab armory={armory} />}
+      {activeTab === "아크패시브" && <ArkPassiveTab armory={armory} arkPassive={arkPassive} />}
       {activeTab === "내실"    && <ComingSoon label="내실" />}
       {activeTab === "아바타"  && <ComingSoon label="아바타" />}
       {activeTab === "통계"    && <ComingSoon label="통계" />}

@@ -1,4 +1,4 @@
-import { LostarkCharacter, CharacterArmory } from "@/types";
+import { LostarkCharacter, CharacterArmory, ArkPassiveData } from "@/types";
 
 const BASE_URL = "https://developer-lostark.game.onstove.com";
 
@@ -44,5 +44,17 @@ export async function getCharacterArmory(
   const encoded = encodeURIComponent(characterName);
   return lostarkFetch<CharacterArmory>(
     `/armories/characters/${encoded}?filters=profiles+equipment+engravings+gems+cards+combat-skills`
+  );
+}
+
+/**
+ * 캐릭터 아크 패시브 조회 (V5.0.0+)
+ */
+export async function getCharacterArkPassive(
+  characterName: string
+): Promise<ArkPassiveData> {
+  const encoded = encodeURIComponent(characterName);
+  return lostarkFetch<ArkPassiveData>(
+    `/armories/characters/${encoded}/arkpassive`
   );
 }
